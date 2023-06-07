@@ -1,0 +1,27 @@
+version: 0.2
+
+phases:
+#  pre_build:
+#    commands:
+#    - curl -LOk https://blackducksoftware.github.io/hub-detect/hub-detect.sh
+#    - hubUrl=$(aws ssm get-parameters --region us-east-1 --names BLACKDUCK_HUB_URL --query Parameters[0].Value)
+#    - hubUserName=$(aws ssm get-parameters --region us-east-1 --names BLACKDUCK_HUB_USERNAME --query Parameters[0].Value)
+#    - hubPassword=$(aws ssm get-parameters --region us-east-1 --names BLACKDUCK_HUB_PASSWORD --with-decryption --query Parameters[0].Value)
+  build:
+    commands:
+    - mvn clean package
+  post_build:
+    commands:
+#    - mvn sonar:sonar -Dsonar.host.url=http://ec2-13-58-15-69.us-east-2.compute.amazonaws.com:9000
+    - cp target/blackduck-integration-demo-*.jar target/blackduck-integration-demo.jar
+
+artifacts:
+  files:
+  - target/blackduck-integration-demo.jar
+  - cftemplate-ec2-s3.json
+  - appspec.yml
+  - scripts/change_permissions.sh
+  - scripts/install_dependencies.sh
+  - scripts/start_server.sh
+  - scripts/stop_server.sh
+  discard-paths: no
